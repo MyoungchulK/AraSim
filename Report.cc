@@ -4944,7 +4944,7 @@ void Report::GetNoiseWaveforms_ch(Settings *settings1, Detector *detector, doubl
         GetNoisePhase(settings1); ///< get random phase for noise
         for (int k = 0; k < noise_pad/2; k++) {
             current_phase = noise_phase[k];
-            V_tmp = detector->GetRayleighFit_databin(ch, k);
+            V_tmp = detector->GetRayleighFit_databin(ch, k); 
             V_tmp *= noise_pad * sqrt_df; ///< correction factor for long noise WF. so that long noise WF also can have a same amplitude with data when arasim do inverse fft
             //! at this point, amplitude of each bin must be H/(N*sqrt(df))*(noise_pad*sqrt_df)
             Vfft_noise_before.push_back( V_tmp );
