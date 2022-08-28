@@ -2313,6 +2313,61 @@ void Report::Connect_Interaction_Detector (Event *event, Detector *detector, Ray
 
 	       if(settings1->TRIG_SCAN_MODE==0){// ******************** old mode left as-is ********************
 
+               /*
+                 We need to add some logic to deal with what happens when we are running in A2 and A3 mode
+                    with config specific trigger delay settings
+               */
+
+                // these must always be set
+                for(int localchan=0; localchan<16; localchan++){
+                    triggerDelay[localchan]=0;
+                    mostDelay=0;
+                }
+
+                if(settings1->DETECTOR==4 && settings1->DETECTOR_STATION_LIVETIME_CONFIG>0){ // if emulating a real station, and we want config selection power
+
+                    if(settings1->DETECTOR_STATION==2){ // if station 2
+
+                        if(settings1->DETECTOR_STATION_LIVETIME_CONFIG==2 || settings1->DETECTOR_STATION_LIVETIME_CONFIG==5 || settings1->DETECTOR_STATION_LIVETIME_CONFIG==6){ // if config 5 or 5 in A2
+                            triggerDelay[4] = 81.4 + 100;
+                            triggerDelay[5] = 73.2 + 100;
+                            triggerDelay[6] = 15.4 + 100;
+                            triggerDelay[7] = 7.2  + 100;
+
+                            // string 0 = D2, string 2 = D4, string3 = D1
+                            triggerDelay[0] = triggerDelay[8] = triggerDelay[12]  = 81.4;
+                            triggerDelay[1] = triggerDelay[9] = triggerDelay[13]  = 73.2;
+                            triggerDelay[2] = triggerDelay[10] = triggerDelay[14] = 15.4;
+                            triggerDelay[3] = triggerDelay[11] = triggerDelay[15] = 7.2;
+
+                            mostDelay = triggerDelay[4];
+
+                        }
+                    }
+
+                    if(settings1->DETECTOR_STATION==3){
+
+                        if(settings1->DETECTOR_STATION_LIVETIME_CONFIG==2 || settings1->DETECTOR_STATION_LIVETIME_CONFIG==4){ // if config 2 or 4 in A3
+
+                            // string 0 = D2, order 0-3 BV-BH-TV-TH
+                            triggerDelay[0] = 81.4 + 100;
+                            triggerDelay[1] = 73.2 + 100;
+                            triggerDelay[2] = 15.4 + 100;
+                            triggerDelay[3] = 7.2  + 100;
+
+                            // string 1 = D3, string 2 = D4, string3 = D1
+                            triggerDelay[4] = triggerDelay[8] = triggerDelay[12]  = 81.4;
+                            triggerDelay[5] = triggerDelay[9] = triggerDelay[13]  = 73.2;
+                            triggerDelay[6] = triggerDelay[10] = triggerDelay[14] = 15.4;
+                            triggerDelay[7] = triggerDelay[11] = triggerDelay[15] = 7.2;
+
+                            mostDelay = triggerDelay[0];
+
+                        }
+                    }
+                }
+
+
                // avoid really long trig_window_bin case (change trig_window to check upto max_total_bin)
                if (max_total_bin - trig_window_bin <= trig_i) trig_window_bin = max_total_bin - trig_i -1;
 	       
@@ -2330,6 +2385,36 @@ void Report::Connect_Interaction_Detector (Event *event, Detector *detector, Ray
                    //for ( trig_j=0; trig_j<ch_ID; trig_j++) {    // loop over all channels
                    trig_j = 0;
                    while (trig_j < ch_ID ) {
+
+
+                        // need to mask out a trigger channel when necessary
+                        // which is when emulating real station 2 in config 3-5 only
+                        if(settings1->DETECTOR==4 && settings1->DETECTOR_STATION==2){
+                            if(settings1->DETECTOR_STATION_LIVETIME_CONFIG>2){
+                                if(trig_j==9){
+                                    trig_j++;
+                                    //cout<<"A2 RF ch15 is excluded from trigger!!"<<endl;
+                                    continue;
+                                }
+                            }
+                        }
+
+                        if(settings1->DETECTOR==4 && settings1->DETECTOR_STATION==3){
+                            if(settings1->DETECTOR_STATION_LIVETIME_CONFIG>5){
+                                if(trig_j==8){
+                                    trig_j++;
+                                    //cout<<"A3 RF ch 7 is excluded from trigger!!"<<endl;
+                                    continue;
+                                }
+                            }
+                        }
+
+                        int offset=0;
+                        if(settings1->DETECTOR==4){
+                           // only try to calculate the offset of DETECTOR=4, and we can guarantee that there will be an entry for triggerDelay[trig_j]
+                           // otherwise, if someone simulates an ideal station and changes the number of channels, this will segfault in a very hard to debug way
+                           offset = int((mostDelay -  triggerDelay[trig_j]) / (settings1->TIMESTEP * 1e9));
+                        }
 
                        int string_i = detector->getStringfromArbAntID( i, trig_j);
                        int antenna_i = detector->getAntennafromArbAntID( i, trig_j);
@@ -2520,10 +2605,11 @@ void Report::Connect_Interaction_Detector (Event *event, Detector *detector, Ray
 
                                if ( settings1->NOISE_CHANNEL_MODE==0) {
                                    // with threshold offset by chs
-                                   if ( trigger->Full_window[trig_j][trig_i+trig_bin] < (detector->GetThres(i, channel_num-1, settings1) * trigger->rmsdiode * detector->GetThresOffset( i, channel_num-1,settings1) ) ) {   // if this channel passed the trigger!
+                                   if( trig_i+offset+trig_bin >= settings1->DATA_BIN_SIZE ) break; //if trigger window hits wf end, cannot scan this channel further with this trig_i
+                                   if ( trigger->Full_window[trig_j][trig_i+trig_bin+offset] < (detector->GetThres(i, channel_num-1, settings1) * trigger->rmsdiode * detector->GetThresOffset( i, channel_num-1,settings1) ) ) {   // if this channel passed the trigger!
                                        //cout<<"trigger passed at bin "<<trig_i+trig_bin<<" ch : "<<trig_j<<endl;
                                        //stations[i].strings[(int)((trig_j)/4)].antennas[(int)((trig_j)%4)].Trig_Pass = trig_i+trig_bin;
-                                       stations[i].strings[string_i].antennas[antenna_i].Trig_Pass = trig_i+trig_bin;
+                                       stations[i].strings[string_i].antennas[antenna_i].Trig_Pass = trig_i+trig_bin+offset;
                                        N_pass++;
                                        if (detector->stations[i].strings[string_i].antennas[antenna_i].type == 0) { // Vpol
                                            N_pass_V++;
@@ -2538,8 +2624,9 @@ void Report::Connect_Interaction_Detector (Event *event, Detector *detector, Ray
                                }
                                else if ( settings1->NOISE_CHANNEL_MODE==1) {
                                    // with threshold offset by chs
-                                   if ( trigger->Full_window[trig_j][trig_i+trig_bin] < (detector->GetThres(i, channel_num-1, settings1) * trigger->rmsdiode_ch[channel_num-1] * detector->GetThresOffset( i, channel_num-1,settings1) ) ) {   // if this channel passed the trigger!
-                                       stations[i].strings[string_i].antennas[antenna_i].Trig_Pass = trig_i+trig_bin;
+                                   if( trig_i+offset+trig_bin >= settings1->DATA_BIN_SIZE ) break; //if trigger window hits wf end, cannot scan this channel further with this trig_i
+                                   if ( trigger->Full_window[trig_j][trig_i+trig_bin+offset] < (detector->GetThres(i, channel_num-1, settings1) * trigger->rmsdiode_ch[channel_num-1] * detector->GetThresOffset( i, channel_num-1,settings1) ) ) {   // if this channel passed the trigger!
+                                       stations[i].strings[string_i].antennas[antenna_i].Trig_Pass = trig_i+trig_bin+offset;
                                        N_pass++;
                                        if (detector->stations[i].strings[string_i].antennas[antenna_i].type == 0) { // Vpol
                                            N_pass_V++;
