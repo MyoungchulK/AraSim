@@ -2130,9 +2130,14 @@ Detector::Detector(Settings *settings1, IceModel *icesurface, string setupfile) 
             It needs to specify DETECTOR_STATION and DETECTOR_STATION_LIVETIME_CONFIG options
         */
         string st = to_string(settings1->DETECTOR_STATION);
+        string run = to_string(settings1->DETECTOR_RUN);
         string config = to_string(settings1->DETECTOR_STATION_LIVETIME_CONFIG);
         if (settings1->NOISE==2){
-            string rayl_filepath = "data/rayleigh_fits/Rayleigh_A"+st+"_C"+config+".csv";
+            //string rayl_filepath = "data/rayleigh_fits/Rayleigh_A"+st+"_C"+config+".csv";
+            //cout<<"     Reading rayleigh distribution : "<< rayl_filepath <<endl;
+            //ReadRayleighFit_TestBed(rayl_filepath, settings1);
+            string rayl_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/rayl/rayl_A"+st+"_R"+run+".csv";
+            //string rayl_filepath = "/data/user/mkim/OMF_filter/ARA0"+st+"/rayl/rayl_A"+st+"_R"+run+".csv";
             cout<<"     Reading rayleigh distribution : "<< rayl_filepath <<endl;
             ReadRayleighFit_TestBed(rayl_filepath, settings1);
         }
@@ -2156,6 +2161,12 @@ Detector::Detector(Settings *settings1, IceModel *icesurface, string setupfile) 
         else if (settings1->CUSTOM_ELECTRONICS==2){ ///< electric chain for individual channels, 2022-06-17 -MK-
             string ele_filepath = "./data/electronics_gains/In_situ_Electronics_A"+st+"_C"+config+".txt";
             cout<<"     Reading in-situ based electronics response : "<< ele_filepath <<endl;       
+            ReadElectChain_ch(ele_filepath, settings1);
+        }
+        else if (settings1->CUSTOM_ELECTRONICS==3){
+            string ele_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/rayl/sc_A"+st+"_R"+run+".txt";
+            //string ele_filepath = "./data/user/mkim/OMF_filter/ARA0"+st+"/rayl/sc_A"+st+"_R"+run+".txt";
+            cout<<"     Reading in-situ based electronics response : "<< ele_filepath <<endl;
             ReadElectChain_ch(ele_filepath, settings1);
         }
 	    cout<<"done read elect chain"<<endl;
@@ -4433,8 +4444,27 @@ inline void Detector::ReadElectChain_ch(string filename, Settings *settings1) {
             yphase[i] = (all_chElect[i][2*ch+2]);
         }
 
-        Tools::SimpleLinearInterpolation( N-1, xfreq, ygain, freq_step, Freq, ElectGain_ch[ch] );
-        Tools::SimpleLinearInterpolation( N-1, xfreq, yphase, freq_step, Freq, ElectPhase_ch[ch] );
+        int sim_ch;
+        if (ch == 0) {sim_ch = 14;} 
+        else if (ch == 4) {sim_ch = 12;} 
+        else if (ch == 8) {sim_ch = 15;} 
+        else if (ch == 12) {sim_ch = 13;} 
+        else if (ch == 1) {sim_ch = 2;} 
+        else if (ch == 5) {sim_ch = 0;} 
+        else if (ch == 9) {sim_ch = 3;} 
+        else if (ch == 13) {sim_ch = 1;} 
+        else if (ch == 2) {sim_ch = 6;} 
+        else if (ch == 6) {sim_ch = 4;} 
+        else if (ch == 10) {sim_ch = 7;} 
+        else if (ch == 14) {sim_ch = 5;} 
+        else if (ch == 3) {sim_ch = 10;} 
+        else if (ch == 7) {sim_ch = 8;} 
+        else if (ch == 11) {sim_ch = 11;} 
+        else if (ch == 15) {sim_ch = 9;} 
+        cerr<<"rf ch: "<<ch<<", sim ch: "<<sim_ch<<endl;
+
+        Tools::SimpleLinearInterpolation( N-1, xfreq, ygain, freq_step, Freq, ElectGain_ch[sim_ch] );
+        Tools::SimpleLinearInterpolation( N-1, xfreq, yphase, freq_step, Freq, ElectPhase_ch[sim_ch] );
 
     }
 }

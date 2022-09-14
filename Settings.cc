@@ -82,6 +82,8 @@ outputdir="outputs"; // directory where outputs go
 
   DETECTOR_STATION=-1; // initiate this to negative -1, so it does nothing by default
 
+  DETECTOR_RUN=0; ///< if you want to compare with each run~
+
   DETECTOR_STATION_LIVETIME_CONFIG=0; ///< temperaily use this A2/3 diffuse option for in-situ noise model and signal chain gain, 2022-06-17 -MK-
 
   INTERACTION_MODE=1;   //PickNear mode (0: Aeff mode using sphere surface around station, 1: Veff mode using cylinder volume around station)
@@ -354,6 +356,9 @@ void Settings::ReadFile(string setupfile) {
               }
               else if (label == "DETECTOR_STATION") {
                   DETECTOR_STATION = atof( line.substr(line.find_first_of("=") + 1).c_str() );
+              }
+              else if (label == "DETECTOR_RUN") {
+                  DETECTOR_RUN = atof( line.substr(line.find_first_of("=") + 1).c_str() );
               }
               else if (label == "DETECTOR_STATION_LIVETIME_CONFIG") {
                   DETECTOR_STATION_LIVETIME_CONFIG = atof( line.substr(line.find_first_of("=") + 1).c_str() );
