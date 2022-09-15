@@ -2136,7 +2136,7 @@ Detector::Detector(Settings *settings1, IceModel *icesurface, string setupfile) 
             //string rayl_filepath = "data/rayleigh_fits/Rayleigh_A"+st+"_C"+config+".csv";
             //cout<<"     Reading rayleigh distribution : "<< rayl_filepath <<endl;
             //ReadRayleighFit_TestBed(rayl_filepath, settings1);
-            string rayl_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/rayl/rayl_A"+st+"_R"+run+".csv";
+            string rayl_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/sim_table/rayl_A"+st+"_R"+run+".csv";
             //string rayl_filepath = "/data/user/mkim/OMF_filter/ARA0"+st+"/rayl/rayl_A"+st+"_R"+run+".csv";
             cout<<"     Reading rayleigh distribution : "<< rayl_filepath <<endl;
             ReadRayleighFit_TestBed(rayl_filepath, settings1);
@@ -2164,7 +2164,7 @@ Detector::Detector(Settings *settings1, IceModel *icesurface, string setupfile) 
             ReadElectChain_ch(ele_filepath, settings1);
         }
         else if (settings1->CUSTOM_ELECTRONICS==3){
-            string ele_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/rayl/sc_A"+st+"_R"+run+".txt";
+            string ele_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/sim_table/sc_A"+st+"_R"+run+".txt";
             //string ele_filepath = "./data/user/mkim/OMF_filter/ARA0"+st+"/rayl/sc_A"+st+"_R"+run+".txt";
             cout<<"     Reading in-situ based electronics response : "<< ele_filepath <<endl;
             ReadElectChain_ch(ele_filepath, settings1);
