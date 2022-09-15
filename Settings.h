@@ -302,6 +302,8 @@ class Settings
 	int CUSTOM_ELECTRONICS; //0 (default): use the regular "ARA_Electronics_TotalGain_TwoFilter.txt" file
 							//1 : load a custom electronics file, stored as "custom_electronics.txt" in the `data` directory
 
+    int NO_ELECTRONICS;
+
   int ANALYTIC_RAYTRACE_MODE; //default: 0 -- use numerical RayTracing for AraSim, 1 -- use analytical raytracing 
 
 

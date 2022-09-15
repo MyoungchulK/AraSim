@@ -297,6 +297,8 @@ outputdir="outputs"; // directory where outputs go
 
     CUSTOM_ELECTRONICS=0; //default: 0 -- don't use custom electronics, load regular "ARA_Electronics_TotalGain_TwoFilter.tst"
 
+    NO_ELECTRONICS=0;
+
     ANALYTIC_RAYTRACE_MODE=0; //default: 0 -- use numerical RayTracing for AraSim, 1 -- use analytical raytracing 
 
     /*
@@ -683,6 +685,9 @@ void Settings::ReadFile(string setupfile) {
               }
               else if (label == "CUSTOM_ELECTRONICS"){
               	   CUSTOM_ELECTRONICS = atoi(line.substr(line.find_first_of("=") + 1).c_str());
+              }
+              else if (label == "NO_ELECTRONICS"){
+                   NO_ELECTRONICS = atoi(line.substr(line.find_first_of("=") + 1).c_str());
               }
 	      else if (label == "ANALYTIC_RAYTRACE_MODE"){
         	   ANALYTIC_RAYTRACE_MODE = atoi(line.substr(line.find_first_of("=") + 1).c_str());

@@ -286,7 +286,7 @@ class Report {
 
         //! added 'int ch' option to use electric chain for individual channels, 2022-06-17 -MK-
         void ApplyElect_Tdomain(int ch, double freq, Detector *detector, double &vm_real, double &vm_img, Settings *settings1);
-        void ApplyElect_Tdomain_FirstTwo(int ch, double freq0, double freq1, Detector *detector, double &vm_bin0, double &vm_bin1);
+        void ApplyElect_Tdomain_FirstTwo(int ch, double freq0, double freq1, Detector *detector, double &vm_bin0, double &vm_bin1, Settings *settings1);
 
         void ApplyFilter(int bin_n, Detector *detector, double &vmmhz);
         void ApplyFilter_databin(int bin_n, Detector *detector, double &vmmhz);
