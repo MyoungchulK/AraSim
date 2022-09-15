@@ -2133,11 +2133,13 @@ Detector::Detector(Settings *settings1, IceModel *icesurface, string setupfile) 
         string run = to_string(settings1->DETECTOR_RUN);
         string config = to_string(settings1->DETECTOR_STATION_LIVETIME_CONFIG);
         if (settings1->NOISE==2){
-            //string rayl_filepath = "data/rayleigh_fits/Rayleigh_A"+st+"_C"+config+".csv";
-            //cout<<"     Reading rayleigh distribution : "<< rayl_filepath <<endl;
-            //ReadRayleighFit_TestBed(rayl_filepath, settings1);
-            string rayl_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/sim_table/rayl_A"+st+"_R"+run+".csv";
-            //string rayl_filepath = "/data/user/mkim/OMF_filter/ARA0"+st+"/rayl/rayl_A"+st+"_R"+run+".csv";
+            string rayl_filepath;
+            if (settings1->CUSTOM_ELECTRONICS==3){
+                rayl_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/sim_table/rayl_A"+st+"_R"+run+".csv";
+                //rayl_filepath = "/data/user/mkim/OMF_filter/ARA0"+st+"/rayl/rayl_A"+st+"_R"+run+".csv";
+            } else {
+                rayl_filepath = "data/rayleigh_fits/Rayleigh_A"+st+"_C"+config+".csv";
+            }
             cout<<"     Reading rayleigh distribution : "<< rayl_filepath <<endl;
             ReadRayleighFit_TestBed(rayl_filepath, settings1);
         }
