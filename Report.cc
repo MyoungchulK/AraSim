@@ -2324,7 +2324,7 @@ void Report::Connect_Interaction_Detector (Event *event, Detector *detector, Ray
                     mostDelay=0;
                 }
 
-                if(settings1->DETECTOR==4 && settings1->DETECTOR_STATION_LIVETIME_CONFIG>0){ // if emulating a real station, and we want config selection power
+                if(settings1->DETECTOR==4 && settings1->DETECTOR_STATION_LIVETIME_CONFIG>0 && settings1->DETECTOR_TRIG_DELAY==1){ // if emulating a real station, and we want config selection power
 
                     if(settings1->DETECTOR_STATION==2){ // if station 2
 
@@ -2389,7 +2389,7 @@ void Report::Connect_Interaction_Detector (Event *event, Detector *detector, Ray
 
                         // need to mask out a trigger channel when necessary
                         // which is when emulating real station 2 in config 3-5 only
-                        if(settings1->DETECTOR==4 && settings1->DETECTOR_STATION==2){
+                        if(settings1->DETECTOR==4 && settings1->DETECTOR_STATION==2 && settings1->DETECTOR_CH_MASK==1){
                             if(settings1->DETECTOR_STATION_LIVETIME_CONFIG>2){
                                 if(trig_j==9){
                                     trig_j++;
@@ -2399,7 +2399,7 @@ void Report::Connect_Interaction_Detector (Event *event, Detector *detector, Ray
                             }
                         }
 
-                        if(settings1->DETECTOR==4 && settings1->DETECTOR_STATION==3){
+                        if(settings1->DETECTOR==4 && settings1->DETECTOR_STATION==3 && settings1->DETECTOR_CH_MASK==1){
                             if(settings1->DETECTOR_STATION_LIVETIME_CONFIG>5){
                                 if(trig_j==8){
                                     trig_j++;
@@ -2410,7 +2410,7 @@ void Report::Connect_Interaction_Detector (Event *event, Detector *detector, Ray
                         }
 
                         int offset=0;
-                        if(settings1->DETECTOR==4){
+                        if(settings1->DETECTOR==4 && settings1->DETECTOR_TRIG_DELAY==1){
                            // only try to calculate the offset of DETECTOR=4, and we can guarantee that there will be an entry for triggerDelay[trig_j]
                            // otherwise, if someone simulates an ideal station and changes the number of channels, this will segfault in a very hard to debug way
                            offset = int((mostDelay -  triggerDelay[trig_j]) / (settings1->TIMESTEP * 1e9));
