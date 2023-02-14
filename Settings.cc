@@ -86,6 +86,10 @@ outputdir="outputs"; // directory where outputs go
 
   DETECTOR_STATION_LIVETIME_CONFIG=0; ///< temperaily use this A2/3 diffuse option for in-situ noise model and signal chain gain, 2022-06-17 -MK-
 
+  DETECTOR_CH_MASK=1; ///< whether use channel mask or not. defalut 1: use, 0: not use
+
+  DETECTOR_TRIG_DELAY=1; ///< whether use trigger delay or not. defalut 1: use, 0: not use
+
   INTERACTION_MODE=1;   //PickNear mode (0: Aeff mode using sphere surface around station, 1: Veff mode using cylinder volume around station)
 
   POSNU_RADIUS=3000;    //radius for PickNear method
@@ -364,6 +368,12 @@ void Settings::ReadFile(string setupfile) {
               }
               else if (label == "DETECTOR_STATION_LIVETIME_CONFIG") {
                   DETECTOR_STATION_LIVETIME_CONFIG = atof( line.substr(line.find_first_of("=") + 1).c_str() );
+              }
+              else if (label == "DETECTOR_CH_MASK") {
+                  DETECTOR_CH_MASK = atof( line.substr(line.find_first_of("=") + 1).c_str() );
+              }
+              else if (label == "DETECTOR_TRIG_DELAY") {
+                  DETECTOR_TRIG_DELAY = atof( line.substr(line.find_first_of("=") + 1).c_str() );
               }
               else if (label == "INTERACTION_MODE") {
                   INTERACTION_MODE = atof( line.substr(line.find_first_of("=") + 1).c_str() );

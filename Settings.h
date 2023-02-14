@@ -59,6 +59,10 @@ class Settings
  
     int DETECTOR_STATION_LIVETIME_CONFIG; //default 0: no special config
 
+    int DETECTOR_CH_MASK;
+
+    int DETECTOR_TRIG_DELAY;
+
 	int number_of_stations; // the number of stations to be used in the simulation
 
         int INTERACTION_MODE;   // method to choose interaction point posnu. 0 : PickUnbiased, 1 : PickNear, 2 : PickExact, 3 : PickAboveIce
