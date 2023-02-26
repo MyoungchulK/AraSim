@@ -4767,6 +4767,7 @@ inline void Detector::ReadRayleighFit_TestBed(string filename, Settings *setting
 
         // Tools::SimpleLinearInterpolation will return Rayleigh array (in dB)
         Tools::SimpleLinearInterpolation( N, xfreq, Rayleigh, freq_step, Freq, Rayleigh_TB_ch[ch] );
+        //Tools::SimpleLinearInterpolation( N, xfreq, Rayleigh, settings1->DATA_BIN_SIZE/2, xfreq_databin, Rayleigh_TB_ch[ch] );
         
         Tools::SimpleLinearInterpolation( N, xfreq, Rayleigh, settings1->DATA_BIN_SIZE/2, xfreq_databin, Rayleigh_databin );
 
@@ -4880,6 +4881,7 @@ inline void Detector::ReadRayleighFit_TestBed(string filename, Settings *setting
         }
 
         Tools::SimpleLinearInterpolation( N, xfreq, Rayleigh, freq_step, Freq, Rayleigh_TB_ch[ch] );
+        //Tools::SimpleLinearInterpolation( N, xfreq, Rayleigh, settings1->DATA_BIN_SIZE/2, xfreq_databin, Rayleigh_TB_ch[ch] );
         
         Tools::SimpleLinearInterpolation( N, xfreq, Rayleigh, settings1->DATA_BIN_SIZE/2, xfreq_databin, Rayleigh_databin );
 
@@ -5029,6 +5031,7 @@ inline void Detector::ReadRayleighFit(string filename, Settings *settings1) {   
         
         // Tools::SimpleLinearInterpolation will return Rayleigh array (in dB)
         Tools::SimpleLinearInterpolation( N, xfreq, Rayleigh, freq_step, Freq, Rayleigh_TB_ch[ch] );
+        //Tools::SimpleLinearInterpolation( N, xfreq, Rayleigh, settings1->DATA_BIN_SIZE/2, xfreq_databin, Rayleigh_TB_ch[ch] );
         
         Tools::SimpleLinearInterpolation( N, xfreq, Rayleigh, settings1->DATA_BIN_SIZE/2, xfreq_databin, Rayleigh_databin );
         
@@ -5092,16 +5095,18 @@ void Detector::ReadRayleigh_New(Settings *settings1) {    // will return gain (d
 
     int Rayleigh_ch = Rayleigh_TB_databin_ch.size();
 
-    for (int ch=0; ch<Rayleigh_ch; ch++) {
+    /*for (int ch=0; ch<Rayleigh_ch; ch++) {
 
         Tools::SimpleLinearInterpolation( freq_step, Freq, Rayleigh_TB_ch[ch], settings1->DATA_BIN_SIZE/2, xfreq_databin, Rayleigh_databin );
+        //Tools::SimpleLinearInterpolation( freq_step, xfreq_databin, Rayleigh_TB_ch[ch], settings1->DATA_BIN_SIZE/2, xfreq_databin, Rayleigh_databin );
+        //Tools::SimpleLinearInterpolation( freq_step, xfreq_databin, Rayleigh_TB_databin_ch[ch], settings1->DATA_BIN_SIZE/2, xfreq_databin, Rayleigh_databin );
             
         Rayleigh_TB_databin_ch[ch].clear();
         
         for (int i=0;i<settings1->DATA_BIN_SIZE/2;i++) {
             Rayleigh_TB_databin_ch[ch].push_back( Rayleigh_databin[i] );
         }
-    }
+    }*/
 
 }
 

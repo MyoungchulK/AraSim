@@ -1879,7 +1879,7 @@ void Report::Connect_Interaction_Detector (Event *event, Detector *detector, Ray
 //                       if (DATA_BIN_SIZE_tmp > max_total_bin) DATA_BIN_SIZE_tmp = (long)pow(2., 17.0);
                        //if (DATA_BIN_SIZE_tmp > max_total_bin+settings1->NFOUR/2) DBS = 15; // come out
                    }
-                   settings1->DATA_BIN_SIZE = DATA_BIN_SIZE_tmp;
+                   //settings1->DATA_BIN_SIZE = DATA_BIN_SIZE_tmp;
 //                   cout<<"new DATA_BIN_SIZE : "<<DATA_BIN_SIZE_tmp<<endl;
 //                   cout<<"max_total_bin : "<<max_total_bin<<endl;
 
@@ -5057,10 +5057,15 @@ void Report::GetNoiseWaveforms_ch(Settings *settings1, Detector *detector, doubl
         double noise_pad = settings1->DATA_BIN_SIZE; ///< number of bins for long noise WF
         double sqrt_df = 1. / sqrt(settings1->TIMESTEP * noise_pad);
 
+        //cout<<"DATA_BIN_SIZE: "<<settings1->DATA_BIN_SIZE<<endl;
+
         GetNoisePhase(settings1); ///< get random phase for noise
         for (int k = 0; k < noise_pad/2; k++) {
             current_phase = noise_phase[k];
             V_tmp = detector->GetRayleighFit_databin(ch, k); 
+
+            //if (k == 50 || k == 100 || k == 6000 || k == 7000 || k == 8000) cout<<"k: "<<k<<", V_tmp: "<<V_tmp<<endl;
+
             V_tmp *= noise_pad * sqrt_df; ///< correction factor for long noise WF. so that long noise WF also can have a same amplitude with data when arasim do inverse fft
             //! at this point, amplitude of each bin must be H/(N*sqrt(df))*(noise_pad*sqrt_df)
             Vfft_noise_before.push_back( V_tmp );
