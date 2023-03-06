@@ -2135,8 +2135,8 @@ Detector::Detector(Settings *settings1, IceModel *icesurface, string setupfile) 
         if (settings1->NOISE==2){
             string rayl_filepath;
             if (settings1->CUSTOM_ELECTRONICS==3){
-                rayl_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/sim_table_full/rayl_full_A"+st+"_R"+run+".csv";
-                //rayl_filepath = "/data/user/mkim/OMF_filter/ARA0"+st+"/rayl/rayl_A"+st+"_R"+run+".csv";
+                //rayl_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/sim_table_full/rayl_full_A"+st+"_R"+run+".csv";
+                rayl_filepath = "/data/user/mkim/OMF_filter/ARA0"+st+"/sim_table_full/rayl_full_A"+st+"_R"+run+".csv";
             } else {
                 rayl_filepath = "data/rayleigh_fits/Rayleigh_A"+st+"_C"+config+".csv";
             }
@@ -2166,8 +2166,8 @@ Detector::Detector(Settings *settings1, IceModel *icesurface, string setupfile) 
             ReadElectChain_ch(ele_filepath, settings1);
         }
         else if (settings1->CUSTOM_ELECTRONICS==3){
-            string ele_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/sim_table_full/sc_full_A"+st+"_R"+run+".txt";
-            //string ele_filepath = "./data/user/mkim/OMF_filter/ARA0"+st+"/rayl/sc_A"+st+"_R"+run+".txt";
+            //string ele_filepath = "/misc/disk19/users/mkim/OMF_filter/ARA0"+st+"/sim_table_full/sc_full_A"+st+"_R"+run+".txt";
+            string ele_filepath = "/data/user/mkim/OMF_filter/ARA0"+st+"/sim_table_full/sc_full_A"+st+"_R"+run+".txt";
             cout<<"     Reading in-situ based electronics response : "<< ele_filepath <<endl;
             ReadElectChain_ch(ele_filepath, settings1);
         }
