@@ -751,7 +751,7 @@ void RaySolver::Solve_Ray_org (double source_x, double source_y, double source_z
       solution_toggle = 1;
     }
     else {
-      std::cout << "No solutions" << std::endl;
+      //std::cout << "No solutions" << std::endl;
       solution_toggle = 0;
     }
   }
@@ -1117,6 +1117,11 @@ void RaySolver::Solve_Ray (Position &source, Position &target, IceModel *antarct
     ns = 1.357;
     nd = 1.78;
     nc = 0.027;
+  } else if (settings1->RAY_TRACE_ICE_MODEL_PARAMS == 40){
+    // UNL Modified (PA)
+    ns = 1.326;
+    nd = 1.78;
+    nc = 0.0202;
   }
   else {
     // South Pole Values (AraSim original default, based on RICE)
